@@ -14,7 +14,6 @@ running = True
 dt = 0
 board = Board(screen)
 
-player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
 
 while running:
     # poll for events
@@ -26,7 +25,9 @@ while running:
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("white")
 
+
     board.draw()
+
 
 
     # flip() the display to put your work on screen

@@ -1,5 +1,21 @@
-import pygame
+# BOARD CLASS
+# Description:
+#   Cells collection.
 
+# States:
+#   Locked: Can't move pieces (analysis phase)
+#   Unlocked: Can move pieces (standard state in game)
+#   Piece_selected: Whenever a piece is clicked. After it's moved or deselected it goes back to unlocked
+
+# Render order (back to front):
+#   1. Board background
+#       a. draw cells
+#       b. draw board border
+#   2. Effects (Selection highlights)
+#   3. Pieces
+
+import pygame
+import Cell from cell
 
 class Board:
     def __init__(self, screen):
@@ -34,7 +50,7 @@ class Board:
         # Crear el rectángulo base que define toda el área del tablero
         board_rect = pygame.Rect(self.offset_x, self.offset_y, self.board_size, self.board_size)
 
-        # Dibujar el fondo del tablero para que no quede del color de la ventana
+        # Dibujar el fondo del tablero
         pygame.draw.rect(self.screen, self.bg_color, board_rect)
 
         # Dibujar las líneas de la grilla 3x3 (las divisiones internas)
