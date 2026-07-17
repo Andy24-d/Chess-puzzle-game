@@ -2,6 +2,7 @@
 import pygame
 from typing import Final
 from board import Board
+from square import Square, SquareState
 
 #Constants
 FPS_limit: Final = 60
@@ -13,6 +14,8 @@ clock = pygame.time.Clock()
 running = True
 dt = 0
 board = Board(screen)
+board.grid[0][0].state = SquareState.HIGHLIGHTED
+board.grid[2][1].set_state(SquareState.SELECTABLE)
 
 
 while running:
@@ -23,7 +26,7 @@ while running:
             running = False
 
     # fill the screen with a color to wipe away anything from last frame
-    screen.fill("white")
+    screen.fill( (239, 227, 175) )
 
 
     board.draw()
