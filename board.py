@@ -4,15 +4,10 @@
 
 # States:
 #   Locked: Can't move pieces (analysis phase)
-#   Unlocked: Can move pieces (standard state in game)
-#   Piece_selected: Whenever a piece is clicked. After it's moved or deselected it goes back to unlocked
+#   Idle: Can move pieces (standard state in game)
+#   Piece_selected: Whenever a piece is clicked. After it's moved or deselected it goes back to idle
 
-# Render order (back to front):
-#   1. Board background
-#       a. draw cells
-#       b. draw board border
-#   2. Effects (Selection highlights)
-#   3. Pieces
+
 
 import pygame
 from square import Square, SquareState
@@ -23,34 +18,28 @@ class Board:
         self.rows = 3
         self.cols = 3
 
-        # Ajustes visuales
         self.screen_height  = screen.get_height()
         self.screen_width = screen.get_width()
 
-        # Tamaño del tablero (640x640)
+        # Board dimensions (640x640)
         self.board_size = 640
         self.cell_size = self.board_size // 3
 
-        # Cálculo de los offsets (distancia a los márgenes)
+        # Offsets calc
         self.offset_x = 40
         self.offset_y = (self.screen_height - self.board_size) // 2  # Da 40
 
-        # Rectangulo que representa coordenas del tablero
+        # pygame.Rect (board coordinates)
         self.rect = pygame.Rect(self.offset_x, self.offset_y, self.board_size, self.board_size)
 
-        print(type(self.rect), self.rect)
-        square = Square(0, 0, self.rect)
-        print(type(square.rect), square.rect)
-
-        # Lista de la grilla
+        # Grid list
         self.grid = self.make_grid()
 
-        # Colores (Inspirados en la madera de tu imagen)
+        # Colors
         self.border_color = (139, 69, 19)  # Marrón oscuro para el borde exterior
         self.bg_color = (222, 184, 135)  # Color madera clara para el fondo
         self.line_color = (101, 67, 33)  # Marrón oscuro para las divisiones 3x3
 
-        # Grosor del borde exterior
         self.border_thickness = 12
 
     def make_grid(self):
@@ -63,6 +52,23 @@ class Board:
 
             grid.append(row_list)
         return grid
+
+    def add_piece(self, piece, row, col):
+        self.grid[row][col].put_piece(piece)
+
+    # def get_cell_from_pos(self, pos):
+
+    def is_empty_square(self, row, col):
+        return self.grid[row][col].is_empty() == True
+
+    def in_bounds(self, row, col):
+        return 0 <= row < self.rows and 0 <= col < self.cols
+
+    def is_empty_square_pos(self, pos):
+        return self.is_empty_square(pos[0], pos[1])
+
+    def in_bounds_pos(self, pos):
+        return self.in_bounds(pos[0], pos[1])
 
     def draw(self):
 
@@ -80,12 +86,7 @@ class Board:
 
 
 
-    def get_cell_from_pos(self, pos):
-        """Convierte una coordenada (x, y) de ratón en índices (fila, columna)."""
-        x, y = pos
-        row = y // self.cell_size
-        col = x // self.cell_size
-        return row, col
+
 
 
 

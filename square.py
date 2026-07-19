@@ -15,15 +15,15 @@ class SquareState(Enum):
 class Square:
     GRID_SIZE = 3  # tablero 3x3
 
-    # Colores compartidos por todas las instancias (constantes de clase)
+    # Class constants
     HIGHLIGHT_COLOR = (243, 248, 86)
     SELECTABLE_GREEN = (34, 177, 76)
-    SELECTABLE_ALPHA = 140  # ~55% opacidad (255 * 0.55 ≈ 140)
+    SELECTABLE_ALPHA = 140  # ~55% opacity (255 * 0.55 ≈ 140)
 
     def __init__(self, row, col, board_rect, piece=None, dark=(105, 70, 30), light=(211, 164, 100)):
         self.row = row
         self.col = col
-        self.board_rect = board_rect  # pygame.Rect del tablero completo
+        self.board_rect = board_rect  # pygame.Rect of the board the square is in
         self.piece = piece
         self.state = SquareState.NORMAL
 
@@ -50,6 +50,9 @@ class Square:
     def is_occupied(self):
         return self.piece is not None
 
+    def is_empty(self):
+        return self.piece is None
+
     def set_state(self, state):
         self.state = state
 
@@ -63,7 +66,7 @@ class Square:
         return self.rect.center
 
     def draw(self, screen):
-        # 1) Fondo según estado
+        # 1) Background color logic
         if self.state == SquareState.HIGHLIGHTED:
             bg_color = self.HIGHLIGHT_COLOR
         else:
@@ -73,12 +76,11 @@ class Square:
 
         pygame.draw.rect(screen, bg_color, self.rect)
 
-        # 2) Pieza
-        # if self.is_occupied()
-        # Asumimos que tu pieza implementa draw(screen, rect) o compatible
-        # self.piece.draw(screen, self.rect)
+        # 2) Piece render
+        if self.is_occupied():
+            self.piece.draw(screen, self.rect)
 
-        # 3) Indicador selectable (círculo verde semitransparente centrado)
+        # 3) Selectable indicator (green dot)
         if self.state == SquareState.SELECTABLE:
             radius = int(min(self.rect.width, self.rect.height) * 0.14)
 

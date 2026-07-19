@@ -3,6 +3,7 @@ import pygame
 from typing import Final
 from board import Board
 from square import Square, SquareState
+from game_pieces import Knight
 
 #Constants
 FPS_limit: Final = 60
@@ -14,6 +15,8 @@ clock = pygame.time.Clock()
 running = True
 dt = 0
 board = Board(screen)
+knight_test = Knight()
+board.add_piece(knight_test, 0, 0)
 board.grid[0][0].state = SquareState.HIGHLIGHTED
 board.grid[2][1].set_state(SquareState.SELECTABLE)
 
