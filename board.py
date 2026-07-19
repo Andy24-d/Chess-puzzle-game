@@ -42,6 +42,11 @@ class Board:
 
         self.border_thickness = 12
 
+        # Board state
+        self.state = Unlocked_State()
+        self.selected_square_pos = (0, 0)
+        self.choseable_squares_pos = []
+
     def make_grid(self):
         grid = []
         for row in range(self.rows):
@@ -56,7 +61,34 @@ class Board:
     def add_piece(self, piece, row, col):
         self.grid[row][col].put_piece(piece)
 
-    # def get_cell_from_pos(self, pos):
+    def get_piece(self, row, col):
+        self.grid[row][col].get_piece()
+
+    def swap_pieces(self, cell1, cell2):
+        #rows and cols
+        r1, c1 = cell1
+        r2, c2 = cell2
+
+        piece1 = self.get_square(r1, c1).take_piece()
+        piece2 = self.get_square(r2, c2).take_piece()
+
+        self.add_piece(piece1, r2, c2)
+        self.add_piece(piece2, r1, c1)
+
+    def get_index_from_pos(self, pos):
+        """
+        Convert screen coordinates (x, y) into grid indices (row, col).
+        Returns (row, col) or None if pos is outside board rect.
+        """
+        x, y = pos
+
+        if not self.rect.collidepoint(x, y):
+            return None
+
+        col = (x - self.rect.left) // self.cell_size
+        row = (y - self.rect.top)  // self.cell_size
+
+        return (row, col)
 
     def is_empty_square(self, row, col):
         return self.grid[row][col].is_empty() == True
@@ -70,10 +102,10 @@ class Board:
     def in_bounds_pos(self, pos):
         return self.in_bounds(pos[0], pos[1])
 
+    def get_square(self, row, col):
+        return self.grid[row][col]
+
     def draw(self):
-
-        # Crear el rectángulo base que define toda el área del tablero
-
 
         # Dibujar las casillas de la grilla 3x3
         for row in range(3):
@@ -83,6 +115,85 @@ class Board:
         # Dibujar el borde exterior grueso
         # Pasar un número mayor a 0 en el cuarto parámetro dibuja solo el borde
         pygame.draw.rect(self.screen, self.border_color, self.rect, self.border_thickness)
+
+    def handle_click(self, pos):
+        self.state.on_click(self, pos)
+
+    #PRE: A piece is selected
+    def deselect(self):
+        r, c = self.selected_square_pos
+        self.get_square(r, c).reset_state()
+
+        for row, col in self.choseable_squares_pos:
+            self.get_square(row, col).reset_state()
+
+    def select_square(self, row, col):
+        self.deselect()
+
+        self.selected_square_pos = (row, col)
+        square = self.get_square(row, col)
+        square.state = SquareState.HIGHLIGHTED
+
+        self.choseable_squares_pos = square.get_piece().get_legal_moves(row, col, self)
+        for row, col in self.choseable_squares_pos:
+            self.get_square(row, col).state = SquareState.SELECTABLE
+
+    def move_selected_to(self, row, col):
+        self.swap_pieces(self.selected_square_pos, (row, col) )
+
+
+# Board state classes definitions:
+
+from abc import ABC, abstractmethod
+
+class BoardState(ABC):
+    @abstractmethod
+    def on_click(self, board, pos):
+        pass
+
+class Locked_State(BoardState):
+    def on_click(self, board, pos):
+        # ignore clicks
+        return
+
+class Unlocked_State(BoardState):
+    def on_click(self, board, pos):
+        cell_index = board.get_index_from_pos(pos)
+        if cell_index is None:
+            board.deselect()
+            return
+
+        row, col = cell_index
+        if board.is_empty_square(row, col):
+            return
+        else:
+            board.select_square(row, col)
+            board.state = Piece_Selected_State()
+
+
+
+class Piece_Selected_State(BoardState):
+    def on_click(self, board, pos):
+        cell_index = board.get_index_from_pos(pos)
+        if cell_index is None:
+            board.deselect()
+            board.state = Unlocked_State()
+            return
+
+        row, col = cell_index
+        square = board.get_square(row, col)
+
+        if cell_index == board.selected_square_pos:
+            return
+
+        if not board.is_empty_square(row, col):
+            board.select_square(row, col)
+        elif square.state == SquareState.SELECTABLE:
+            board.move_selected_to(row, col)
+            board.deselect()
+            board.state = Unlocked_State()
+        # If you click an empty, unselectable square. Nothing happens (maybe you misclicked)
+
 
 
 

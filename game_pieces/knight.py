@@ -21,6 +21,6 @@ class Knight(Piece):
         for r, c in candidates:
             if board.in_bounds(r, c):
                 # ajusta esta parte a tus reglas de captura/ocupación
-                if board.is_empty(r, c):
+                if board.is_empty_square(r, c):
                     legal.append((r, c))
         return legal

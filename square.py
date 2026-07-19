@@ -42,6 +42,9 @@ class Square:
     def put_piece(self, piece):
         self.piece = piece
 
+    def get_piece(self):
+        return self.piece
+
     def take_piece(self):
         removed = self.piece
         self.piece = None

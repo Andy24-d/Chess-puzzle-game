@@ -16,9 +16,8 @@ running = True
 dt = 0
 board = Board(screen)
 knight_test = Knight()
-board.add_piece(knight_test, 0, 0)
-board.grid[0][0].state = SquareState.HIGHLIGHTED
-board.grid[2][1].set_state(SquareState.SELECTABLE)
+board.add_piece(knight_test, 2, 0)
+
 
 
 while running:
@@ -27,6 +26,11 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            # 1 means left click
+            if event.button == 1:
+                board.handle_click(event.pos)
 
     # fill the screen with a color to wipe away anything from last frame
     screen.fill( (239, 227, 175) )

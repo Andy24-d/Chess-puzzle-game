@@ -9,6 +9,8 @@ class Piece(ABC):
         self.sprite = None
 
     @abstractmethod
+    # (row, col): position of the piece in the board
+    # board: game board where the piece is playing
     def get_legal_moves(self, row: int, col: int, board) -> list[tuple[int, int]]:
         """
         Devuelve una lista de coordenadas destino válidas [(r, c), ...]
