@@ -3,7 +3,7 @@ import pygame
 from typing import Final
 from board import Board
 from square import Square, SquareState
-from game_pieces import Knight
+from game_pieces import Knight, Queen
 
 #Constants
 FPS_limit: Final = 60
@@ -17,7 +17,8 @@ dt = 0
 board = Board(screen)
 knight_test = Knight()
 board.add_piece(knight_test, 2, 0)
-
+queen_test = Queen()
+board.add_piece(queen_test, 1, 1)
 
 
 while running:
