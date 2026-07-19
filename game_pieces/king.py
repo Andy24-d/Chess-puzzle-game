@@ -1,9 +1,8 @@
 from pieces import Piece
 import pygame
 
-class Knight(Piece):
-
-    SPRITE_PATH = "sprites/Knight_paint.png"
+class King(Piece):
+    SPRITE_PATH = "sprites/King_paint.png"
 
     def __init__(self):
         super().__init__()
@@ -11,10 +10,9 @@ class Knight(Piece):
 
     def get_legal_moves(self, row, col, board):
         candidates = [
-            (row + 2, col + 1), (row + 2, col - 1),
-            (row - 2, col + 1), (row - 2, col - 1),
-            (row + 1, col + 2), (row + 1, col - 2),
-            (row - 1, col + 2), (row - 1, col - 2),
+            (row + 1, col), (row - 1, col), (row, col + 1), (row, col - 1),
+            (row + 1, col + 1), (row + 1, col - 1),
+            (row - 1, col + 1), (row - 1, col - 1),
         ]
 
         legal = []

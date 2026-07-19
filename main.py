@@ -3,7 +3,7 @@ import pygame
 from typing import Final
 from board import Board
 from square import Square, SquareState
-from game_pieces import Knight, Queen
+from game_pieces import Knight, Queen, Bishop, Rook, King
 
 #Constants
 FPS_limit: Final = 60
@@ -19,6 +19,12 @@ knight_test = Knight()
 board.add_piece(knight_test, 2, 0)
 queen_test = Queen()
 board.add_piece(queen_test, 1, 1)
+bishop_test = Bishop()
+board.add_piece(bishop_test, 0, 2)
+rook_test = Rook()
+board.add_piece(rook_test, 0, 0)
+king_test = King()
+board.add_piece(king_test, 2, 1)
 
 
 while running:

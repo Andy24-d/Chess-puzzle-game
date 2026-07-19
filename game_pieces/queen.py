@@ -5,7 +5,10 @@ class Queen(Piece):
 
     SPRITE_PATH = "sprites/Queen_paint.png"
     #Board grid legal movement directions
-    DIRECTIONS = [(0, -1), (0, 1), (-1, 0), (1, 0), (-1, -1), (-1, 1), (1, -1), (1, 1)]
+    DIRECTIONS = [
+        (0, -1), (0, 1), (-1, 0), (1, 0),   #Orthogonal moves
+        (-1, -1), (-1, 1), (1, -1), (1, 1)  #Diagonal moves
+    ]
 
     def __init__(self):
         super().__init__()
