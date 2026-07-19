@@ -39,6 +39,18 @@ class Square:
         y = self.board_rect.top + self.row * self.cell_h
         self.rect = pygame.Rect(x, y, self.cell_w, self.cell_h)
 
+        def __eq__(self, other):
+            if not isinstance(other, Square):
+                return NotImplemented
+
+            if self.row != other.row or self.col != other.col:
+                return False
+
+            if self.is_empty() == other.is_empty():
+                return self.is_empty() or ( self.piece == other.piece )
+            else:
+                return False
+
     def put_piece(self, piece):
         self.piece = piece
 

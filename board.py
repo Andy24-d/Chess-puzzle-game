@@ -11,9 +11,11 @@
 
 import pygame
 from square import Square, SquareState
+from game_pieces import Knight, Queen, Bishop, Rook, King
+import random
 
 class Board:
-    def __init__(self, screen):
+    def __init__(self, screen, board_size=640, offset_x=40, offset_y=40):
         self.screen = screen
         self.rows = 3
         self.cols = 3
@@ -22,12 +24,12 @@ class Board:
         self.screen_width = screen.get_width()
 
         # Board dimensions (640x640)
-        self.board_size = 640
+        self.board_size = board_size
         self.cell_size = self.board_size // 3
 
         # Offsets calc
-        self.offset_x = 40
-        self.offset_y = (self.screen_height - self.board_size) // 2  # Da 40
+        self.offset_x = offset_x
+        self.offset_y = offset_y
 
         # pygame.Rect (board coordinates)
         self.rect = pygame.Rect(self.offset_x, self.offset_y, self.board_size, self.board_size)
@@ -47,6 +49,11 @@ class Board:
         self.selected_square_pos = (0, 0)
         self.choseable_squares_pos = []
 
+    def __eq__(self, other):
+        for row in range(self.rows):
+            for col in range(self.cols):
+                self.get_square(row, col) == other.get_square(row, col)
+
     def make_grid(self):
         grid = []
         for row in range(self.rows):
@@ -57,6 +64,21 @@ class Board:
 
             grid.append(row_list)
         return grid
+
+    def setup(self):
+        # 6 piezas + 3 vacías
+        pool = [
+            King(), Queen(), Rook(), Bishop(), Knight(), None,
+            None, None, None
+        ]
+
+        random.shuffle(pool)
+
+        for row in range(self.rows):
+            for col in range(self.cols):
+                piece = pool[row*3 + col]
+                self.add_piece(piece, row, col)
+
 
     def add_piece(self, piece, row, col):
         self.grid[row][col].put_piece(piece)

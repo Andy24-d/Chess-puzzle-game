@@ -8,6 +8,11 @@ class Piece(ABC):
     def __init__(self):
         self.sprite = None
 
+    def __eq__(self, other):
+        if not isinstance(other, Piece):
+            return NotImplemented
+        return type(self) is type(other)
+
     @abstractmethod
     # (row, col): position of the piece in the board
     # board: game board where the piece is playing
