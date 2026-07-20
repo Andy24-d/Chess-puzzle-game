@@ -78,6 +78,15 @@ class Square:
     def center(self):
         return self.rect.center
 
+    def change_pos(self, row, col):
+        self.row = row
+        self.col = col
+
+        # rect de esta casilla
+        x = self.board_rect.left + self.col * self.cell_w
+        y = self.board_rect.top + self.row * self.cell_h
+        self.rect = pygame.Rect(x, y, self.cell_w, self.cell_h)
+
     def draw(self, screen):
         # 1) Background color logic
         if self.state == SquareState.HIGHLIGHTED:

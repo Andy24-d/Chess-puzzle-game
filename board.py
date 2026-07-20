@@ -75,6 +75,9 @@ class Board:
         ]
 
         random.shuffle(pool)
+        #Prevents unresolvable game states where the knight is in the middle and thus it can't move anywhere
+        while isinstance( pool[4], Knight ):
+            random.shuffle(pool)
 
         for row in range(self.rows):
             for col in range(self.cols):
@@ -153,6 +156,32 @@ class Board:
 
     def get_square(self, row, col):
         return self.grid[row][col]
+
+    def rotate_clock(self):
+        new_grid = [[None for _ in range(self.cols)] for _ in range(self.rows)]
+        for row in range(self.rows):
+            for col in range(self.cols):
+                new_square = self.get_square(row, col)
+                new_square.change_pos(col, self.rows - 1 - row)
+                new_grid[col][self.rows - 1 - row] = new_square
+        self.grid = new_grid
+
+    def rotate_inverse(self):
+        new_grid = [[None for _ in range(self.cols)] for _ in range(self.rows)]
+        for row in range(self.rows):
+            for col in range(self.cols):
+                new_square = self.get_square(row, col)
+                new_square.change_pos(self.cols - 1 - col, row)
+                new_grid[self.cols - 1 - col][row] = new_square
+        self.grid = new_grid
+
+    def flip_horizontal(self):
+        for col in range(self.cols):
+            self.swap_pieces((0, col), (self.rows - 1, col))
+
+    def flip_vertical(self):
+        for row in range(self.rows):
+            self.swap_pieces((row, 0), (row, self.cols - 1))
 
     def draw(self):
 
