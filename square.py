@@ -20,7 +20,7 @@ class Square:
     SELECTABLE_GREEN = (34, 177, 76)
     SELECTABLE_ALPHA = 140  # ~55% opacity (255 * 0.55 ≈ 140)
 
-    def __init__(self, row, col, board_rect, piece=None, dark=(105, 70, 30), light=(211, 164, 100)):
+    def __init__(self, row, col, board_rect, dark, light, piece=None):
         self.row = row
         self.col = col
         self.board_rect = board_rect  # pygame.Rect of the board the square is in
@@ -41,14 +41,19 @@ class Square:
 
         def __eq__(self, other):
             if not isinstance(other, Square):
+                print("NotImplemented")
                 return NotImplemented
 
             if self.row != other.row or self.col != other.col:
+                print("Different positions")
                 return False
 
             if self.is_empty() == other.is_empty():
+                print("Empty state:" + str(self.is_empty()))
+                print("piece eq:" + str(self.piece == other.piece))
                 return self.is_empty() or ( self.piece == other.piece )
             else:
+                print("Different empty states")
                 return False
 
     def put_piece(self, piece):

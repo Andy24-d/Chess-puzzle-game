@@ -15,7 +15,7 @@ from game_pieces import Knight, Queen, Bishop, Rook, King
 import random
 
 class Board:
-    def __init__(self, screen, board_size=640, offset_x=40, offset_y=40):
+    def __init__(self, screen, board_size=640, offset_x=40, offset_y=40, dark_sq=(105, 70, 30), light_sq=(211, 164, 100)):
         self.screen = screen
         self.rows = 3
         self.cols = 3
@@ -35,12 +35,10 @@ class Board:
         self.rect = pygame.Rect(self.offset_x, self.offset_y, self.board_size, self.board_size)
 
         # Grid list
-        self.grid = self.make_grid()
+        self.grid = self.make_grid(dark_sq, light_sq)
 
         # Colors
         self.border_color = (139, 69, 19)  # Marrón oscuro para el borde exterior
-        self.bg_color = (222, 184, 135)  # Color madera clara para el fondo
-        self.line_color = (101, 67, 33)  # Marrón oscuro para las divisiones 3x3
 
         self.border_thickness = 12
 
@@ -52,17 +50,18 @@ class Board:
     def __eq__(self, other):
         for row in range(self.rows):
             for col in range(self.cols):
-                self.get_square(row, col) == other.get_square(row, col)
+                return ( self.get_square(row, col) == other.get_square(row, col) )
 
-    def make_grid(self):
+    def make_grid(self, sq_dark, sq_light):
         grid = []
         for row in range(self.rows):
             row_list = []
             for col in range(self.cols):
-                empty_square = Square(row, col, self.rect)
+                empty_square = Square(row, col, self.rect, dark=sq_dark, light=sq_light)
                 row_list.append(empty_square)
 
             grid.append(row_list)
+
         return grid
 
     def setup(self):
