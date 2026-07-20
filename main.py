@@ -5,6 +5,7 @@ from board import Board
 from square import Square, SquareState
 from game_pieces import Knight, Queen, Bishop, Rook, King
 
+
 #Constants
 FPS_limit: Final = 60
 objective_dark  = (76, 53, 24)
@@ -18,12 +19,12 @@ running = True
 dt = 0
 board = Board(screen)
 board.setup()
-objective_board = Board(screen, 300, 820, 240, dark_sq=objective_dark, light_sq=objective_light)
+objective_board = Board(screen, 300, 820, 340, dark_sq=objective_dark, light_sq=objective_light)
 objective_board.border_thickness = 4
-objective_board.setup()
+objective_board.setup_solvable(board)
+objective_board.lock()
 
-#while objective_board != board:
-#    objective_board.setup()
+
 
 
 while running:
@@ -38,7 +39,9 @@ while running:
             if event.button == 1:
                 board.handle_click(event.pos)
             if event.button == 2:
+                board.deselect()
                 board.setup()
+                objective_board.setup_solvable(board)
 
     # fill the screen with a color to wipe away anything from last frame
     screen.fill( (239, 227, 175) )

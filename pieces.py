@@ -10,7 +10,8 @@ class Piece(ABC):
 
     def __eq__(self, other):
         if not isinstance(other, Piece):
-            return NotImplemented
+            return False
+
         return type(self) is type(other)
 
     @abstractmethod

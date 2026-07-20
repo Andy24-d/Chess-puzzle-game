@@ -50,7 +50,10 @@ class Board:
     def __eq__(self, other):
         for row in range(self.rows):
             for col in range(self.cols):
-                return ( self.get_square(row, col) == other.get_square(row, col) )
+                if self.get_square(row, col) != other.get_square(row, col):
+                    return False
+
+        return True
 
     def make_grid(self, sq_dark, sq_light):
         grid = []
@@ -78,12 +81,37 @@ class Board:
                 piece = pool[row*3 + col]
                 self.add_piece(piece, row, col)
 
+    def setup_solvable(self, game_board):
+        solvable = False
+        while self != game_board and not solvable:
+            self.setup()
+
+            game_bishop_pos = game_board.find_bishop_pos()
+            objective_bishop_pos = self.find_bishop_pos()
+            if Board.same_color(game_bishop_pos, objective_bishop_pos):
+                solvable = True
+
+    @staticmethod
+    def same_color(cell_a, cell_b):
+        ra, ca = cell_a
+        rb, cb = cell_b
+        return (ra + ca) % 2 == (rb + cb) % 2
+
+    def find_bishop_pos(self):
+        for r in range(self.rows):
+            for c in range(self.cols):
+                p = self.get_square(r, c).get_piece()
+                if isinstance(p, Bishop):
+                    return (r, c)
+        return None
+
+
 
     def add_piece(self, piece, row, col):
         self.grid[row][col].put_piece(piece)
 
     def get_piece(self, row, col):
-        self.grid[row][col].get_piece()
+        return self.grid[row][col].get_piece()
 
     def swap_pieces(self, cell1, cell2):
         #rows and cols
@@ -162,6 +190,10 @@ class Board:
     def move_selected_to(self, row, col):
         self.swap_pieces(self.selected_square_pos, (row, col) )
 
+    def lock(self):
+        self.state = Locked_State()
+    def unlock(self):
+        self.state = Unlocked_State()
 
 # Board state classes definitions:
 
